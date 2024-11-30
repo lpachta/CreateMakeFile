@@ -37,7 +37,7 @@ fi
 case "$Extension" in
 "c")
   CC="gcc"
-  Cflags="-std=c99 -pedantic -Wall -g"
+  Flags="-std=c99 -pedantic -Wall -g"
   ;;
 *)
   echo "unsupported extension!"
@@ -53,12 +53,12 @@ NAME=$ProjectName
 SOURCE_FILES=${SourceFiles[*]}
 CC=$CC
 
-CFLAGS=$Cflags
+FLAGS=$Flags
 EXE_FILE=\$(NAME).bin
 ALL_FILES=./*
 
 compile:
-	\$(CC) \$(CFLAGS) \$(SOURCE_FILES) -o \$(EXE_FILE)
+	\$(CC) \$(FLAGS) \$(SOURCE_FILES) -o \$(EXE_FILE)
 
 run:
 	./\$(EXE_FILE)
