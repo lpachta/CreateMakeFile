@@ -3,5 +3,7 @@
 *.bin
 *.h
 *.cpp
+*.java
+*.class
 
 Makefile

@@ -39,10 +39,16 @@ case "$Extension" in
 "c")
   CC="gcc"
   Flags="-std=c99 -pedantic -Wall -g"
+  Compile="\$(CC) $Flags \$(SOURCE_FILES) -o \$(EXE_FILE)"
   ;;
 "cpp")
   CC="g++"
   Flags="-g -std=c++14 -Wall -Werror -pedantic"
+  Compile="\$(CC) $Flags \$(SOURCE_FILES) -o \$(EXE_FILE)"
+  ;;
+"java")
+  CC="javac"
+  Compile="\$(CC) \$(SOURCE_FILES)"
   ;;
 *)
   echo "unsupported extension!"
@@ -58,12 +64,11 @@ NAME=$ProjectName
 SOURCE_FILES=${SourceFiles[*]}
 CC=$CC
 
-FLAGS=$Flags
 EXE_FILE=\$(NAME).bin
 ALL_FILES=./*
 
 compile:
-	\$(CC) \$(FLAGS) \$(SOURCE_FILES) -o \$(EXE_FILE)
+	$Compile
 
 run:
 	./\$(EXE_FILE)
