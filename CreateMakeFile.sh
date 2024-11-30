@@ -6,7 +6,7 @@ help="
   Usage:
   CreateMakeFiles <extension>
   
-  Supported languages: C
+  Supported languages: C, C++, Java
 "
 
 if [[ $1 == "-h" ]]; then
