@@ -29,8 +29,9 @@ for i in *.$Extension; do # Nacteni source files do array
   SourceFiles+=("$i")
 done
 
-if [[ ${SourceFiles[@]} == 0 ]]; then
+if [[ ${#SourceFiles[@]} == 0 ]]; then
   echo "ERROR: No files in $pwd with extension .$Extension"
+  echo "Aborting"
   exit
 fi
 
@@ -38,6 +39,10 @@ case "$Extension" in
 "c")
   CC="gcc"
   Flags="-std=c99 -pedantic -Wall -g"
+  ;;
+"cpp")
+  CC="g++"
+  Flags="-g -std=c++14 -Wall -Werror -pedantic"
   ;;
 *)
   echo "unsupported extension!"
