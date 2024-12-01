@@ -18,11 +18,14 @@ if [[ $@ < 2 ]]; then
   echo "$help"
   exit
 fi
-
 Extension=$1
 
 ProjectName=$(basename "$(pwd)") # TODO: moznost nacist jmeno projektu ze vstupu
-Author=$(whoami)                 # TODO: moznost nacist jmeno autora z configu
+
+. ~/.config/CreateMakeFiles/CreateMakeFiles.conf # Include a config
+if [ -z "$Author" ]; then
+  Author=$(whoami)
+fi
 
 for i in *.$Extension; do # Nacteni source files do array
   [ -f "$i" ] || break
