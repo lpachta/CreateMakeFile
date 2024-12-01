@@ -4,13 +4,14 @@ help="
   // CreateMakeFiles // 
   
   Usage:
-  CreateMakeFiles <extension> [<project name>]
+  CreateMakeFiles <extension> [<project name>] [<binary filename>]
   
   Supported languages: C, C++, Java
 
-  To use custom Author:
+  To use custom values:
     - create '~/.config/CreateMakeFiles/CreateMakeFiles.conf' 
-    -and add a line: Author=\"<custom-name>\" 
+      - Author=\"<author name>\"
+      - bin=\"<bin filename>\"
 "
 
 if [[ $1 == "-h" ]]; then
@@ -24,7 +25,8 @@ if [[ $# < 1 ]]; then
 fi
 Extension=$1
 
-echo "$#"
+. ~/.config/CreateMakeFiles/CreateMakeFiles.conf # Include a config
+
 if [[ $# > 1 ]]; then
   ProjectName=$2
 else
@@ -34,10 +36,11 @@ fi
 if [[ $# > 2 ]]; then
   bin=$3
 else
-  bin="\$(NAME).bin"
+  if [ -z "$bin" ]; then
+    bin="\$(name).bin"
+  fi
 fi
 
-. ~/.config/CreateMakeFiles/CreateMakeFiles.conf # Include a config
 if [ -z "$Author" ]; then
   Author=$(whoami)
 fi
