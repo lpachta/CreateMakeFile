@@ -4,7 +4,7 @@ help="
   // CreateMakeFiles // 
   
   Usage:
-  CreateMakeFiles <extension>
+  CreateMakeFiles <extension> [<project name>]
   
   Supported languages: C, C++, Java
 
@@ -24,7 +24,11 @@ if [[ $@ < 2 ]]; then
 fi
 Extension=$1
 
-ProjectName=$(basename "$(pwd)") # TODO: moznost nacist jmeno projektu ze vstupu
+if [[ $@ > 2 ]]; then
+  ProjectName=$2
+else
+  ProjectName=$(basename "$(pwd)") # TODO: moznost nacist jmeno projektu ze vstupu
+fi
 
 . ~/.config/CreateMakeFiles/CreateMakeFiles.conf # Include a config
 if [ -z "$Author" ]; then
