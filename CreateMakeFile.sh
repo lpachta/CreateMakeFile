@@ -18,16 +18,23 @@ if [[ $1 == "-h" ]]; then
   exit
 fi
 
-if [[ $@ < 2 ]]; then
+if [[ $# < 1 ]]; then
   echo "$help"
   exit
 fi
 Extension=$1
 
-if [[ $@ > 2 ]]; then
+echo "$#"
+if [[ $# > 1 ]]; then
   ProjectName=$2
 else
-  ProjectName=$(basename "$(pwd)") # TODO: moznost nacist jmeno projektu ze vstupu
+  ProjectName=$(basename "$(pwd)")
+fi
+
+if [[ $# > 2 ]]; then
+  bin=$3
+else
+  bin="\$(NAME).bin"
 fi
 
 . ~/.config/CreateMakeFiles/CreateMakeFiles.conf # Include a config
@@ -75,7 +82,7 @@ NAME=$ProjectName
 SOURCE_FILES=${SourceFiles[*]}
 CC=$CC
 
-EXE_FILE=\$(NAME).bin
+EXE_FILE=$bin 
 ALL_FILES=./*
 
 compile:
