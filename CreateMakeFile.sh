@@ -7,6 +7,10 @@ help="
   CreateMakeFiles <extension>
   
   Supported languages: C, C++, Java
+
+  To use custom Author:
+    - create '~/.config/CreateMakeFiles/CreateMakeFiles.conf' 
+    -and add a line: Author=\"<custom-name>\" 
 "
 
 if [[ $1 == "-h" ]]; then
