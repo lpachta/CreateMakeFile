@@ -62,7 +62,7 @@ while [[ $# > 0 ]]; do # 2+ ARGS
     echo "Author: $Author"
     ;;
   "-b" | "--BinFilename")
-    Author=$2
+    BinFilename=$2
     echo "Bin filename: $BinFilename"
     ;;
   *) ;;
