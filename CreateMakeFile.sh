@@ -46,7 +46,7 @@ esac
 
 . ~/.config/CreateMakeFiles/CreateMakeFiles.conf # Include a config
 
-if [[ config = true ]]; then
+if ! [ -z config ]; then
   echo "Config was found..."
 fi
 
