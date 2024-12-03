@@ -1,13 +1,13 @@
 #!/bin/bash
 
-echo "Removing /usr/bin/CreateMakeFile"
+echo "Removing /usr/bin/CreateMakeFile..."
 echo ""
 
 sudo rm /usr/local/bin/CreateMakeFile
 
 if [ -f "/usr/bin/CreateMakeFile" ]; then
-  echo "Installation failed"
-  echo "Aborting..."
+  echo "Uninstallation failed, file still exists."
+  echo "Aborting"
   exit
 fi
 
