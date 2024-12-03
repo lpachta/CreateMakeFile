@@ -1,28 +1,52 @@
 #!/bin/bash
 
-HelpMenu="
-  // CreateMakeFiles // 
-  
-  Usage:
-  CreateMakeFiles <extension> [<project name>] [<binary filename>]
-  
-  Supported languages: C, C++, Java
+BOLD="\033[1m"
+RESET="\033[0m"
 
-  To use custom values:
-    - create '~/.config/CreateMakeFiles/CreateMakeFiles.conf' 
-      - Author=\"<author name>\"
-      - bin=\"<bin filename>\"
+HelpMenu="
+  
+  ╭───────────────────────────────╮
+  │   --== ${BOLD}CreateMakeFiles${RESET} ==--   │
+  ╰───────────────────────────────╯
+
+  CreateMakeFiles is a bash script used for automatic creating of a Makefile.
+
+  Supported languages: C, C++, Java 
+  
+  This info:
+    CreateMakeFiles -h
+
+  Usage:
+    CreateMakeFile <c | cpp | java> [--flag \"value\", ...]
+
+  Flags:
+    -n | --name ..... enter custom Project name
+    -a | --author ... enter custom Author
+    -b | --bin ...... enter custom Binary Filename
+
+  Imporant:
+    When using multiple word value use quotation marks.
+  
+  To always use custom values create:
+    ~/.config/CreateMakeFiles/CreateMakeFiles.conf
+
+    - the first line MUST contain 'config=true'
+
+  Config syntax:
+    ProjectName=<custom-project-name> #Set ProjectName (Yes, comments work.)
+    Author=<custom-author>
+    BinFilename=<custom-bin-filename>
 "
 
 if [[ $# = 0 ]]; then # 0 ARGS
-  echo "$HelpMenu"
+  echo -e "$HelpMenu"
   exit
 fi
 
 # 1 ARG
 
 if [[ $1 = "-h" ]]; then # -h
-  echo "$HelpMenu"
+  echo -e "$HelpMenu"
   exit
 fi
 
@@ -53,15 +77,15 @@ fi
 while [[ $# > 0 ]]; do # 2+ ARGS
   shift                # Extension is not $1. Working with other flags
   case "$1" in
-  "-n" | "--Name")
+  "-n" | "--name")
     ProjectName=$2
     echo "Project name: $ProjectName"
     ;;
-  "-a" | "--Author")
+  "-a" | "--author")
     Author=$2
     echo "Author: $Author"
     ;;
-  "-b" | "--BinFilename")
+  "-b" | "--bin")
     BinFilename=$2
     echo "Bin filename: $BinFilename"
     ;;
