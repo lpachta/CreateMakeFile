@@ -7,8 +7,9 @@ if ! [ -f "./CreateMakeFile.sh" ]; then
   echo ""
   exit
 fi
-sudo cp ./CreateMakeFile.sh /usr/bin/CreateMakeFile
-if [ -f "/usr/bin/CreateMakeFile" ]; then
+chmod +x ./CreateMakeFile.sh
+sudo cp ./CreateMakeFile.sh /usr/local/bin/CreateMakeFile
+if [ -f "/usr/local/bin/CreateMakeFile" ]; then
   echo "Installation complete."
   echo ""
   exit
