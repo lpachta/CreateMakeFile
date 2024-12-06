@@ -210,43 +210,6 @@ rm-tar:
 clean: rm-tar rm-zip rm-bin
 " >Makefile
 
-#     echo "# Projekt: $ProjectName
-#     # Autor: $Author
-#
-#     # VARS
-#     NAME=$ProjectName
-#     SOURCE_FILES=${SourceFiles[*]}
-#     CC=$CC
-#
-#     EXE_FILE=$BinFilename
-#     ALL_FILES=./*
-#
-#     compile:
-#     	$Compile
-#
-#     run:
-#     	./\$(EXE_FILE)
-#
-#
-#     clear-exe:
-#     	rm \$(EXE_FILE)
-#
-#     clear-bin:
-#     	rm -rf bin/
-#     	rm -rf obj/
-#
-#     clear-pack:
-#     	rm \$(NAME).tar.gz
-#     	rm \$(NAME).zip
-#
-#     pack: clear-bin
-#     	rm \$(NAME)
-#     	tar cvzf \$(NAME).tar.gz \$(ALL_FILES)
-#     	zip \$(NAME).zip \$(ALL_FILES)
-#
-#     clear: clear-bin clear-pack clear-exe
-#     " >Makefile
-
 if [ -f Makefile ]; then
   echo "Makefile has been created."
   exit
