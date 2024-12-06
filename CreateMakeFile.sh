@@ -11,13 +11,13 @@ HelpMenu="
 
   CreateMakeFiles is a bash script used for automatic creating of a Makefile.
 
-  Supported languages: C, C++, Java 
+  Supported languages: C, C++
   
   This info:
     CreateMakeFiles -h
 
   Usage:
-    CreateMakeFile <c | cpp | java> [--flag \"value\", ...]
+    CreateMakeFile <c | cpp> [--flag \"value\", ...]
 
   Flags:
     -n | --name ..... enter custom Project name
@@ -57,9 +57,6 @@ case "$Extension" in
   ;;
 "cpp")
   echo "Creating Makefile for C++ project..."
-  ;;
-"java")
-  echo "Creating Makefile for Java project..."
   ;;
 *)
   echo "Extension $Extension is not supported!"
@@ -130,11 +127,6 @@ case "$Extension" in
   CFlags="-g -std=c++14 -Wall -Werror -pedantic"
   Compile="\$(CC) \$(CFLAGS) \$(SRCS) -o \$(BIN)"
   ;;
-"java")
-  CC="javac"
-  CFlags=""
-  Compile="\$(CC) \$(SOURCE_FILES)"
-  ;;
 *)
   echo "ERROR: unsupported extension!"
   exit
@@ -198,12 +190,12 @@ rm-bin: \$(BIN)
 
 # Remove zip archive
 .PHONY: rm-zip
-rm-zip:
+rm-zip: zip
 		rm \$(ZIP)
 
 # Remove tar.gz archive
 .PHONY: rm-tar
-rm-tar: 
+rm-tar: tar
 		rm \$(TAR)
 
 .PHONY: clean
