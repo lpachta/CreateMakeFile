@@ -1,0 +1,62 @@
+# Projekt: CreateMakeFile
+# Autor: Lukáš Pachta
+
+# Project name
+NAME = CreateMakeFile
+
+# Binary filename (also target)
+BIN = $(NAME).bin
+# Source files
+SRCS = main.c modul.c
+# Modules 
+MODULES = modul.h
+# Files that are put into archives
+ARCHIVE_FILES = $(SRCS) $(MODULES) # Feel free to add additional files here
+
+# Zip filename
+ZIP=$(NAME).zip
+# Tar filename
+TAR=$(NAME).tar.gz
+
+# Compiler
+CC = gcc
+# Compile flags
+CFLAGS = -std=c99 -pedantic -Wall -g
+
+# Compilation command
+COMPILATION=$(CC) $(CFLAGS) $(SRCS) -o $(BIN)
+
+# Run the target
+.PHONY: run
+run: $(BIN)
+		./$(BIN)
+
+# Compile target
+$(BIN): $(SRCS)
+		$(COMPILATION)
+
+# Archive files into zip
+.PHONY:
+zip:
+		zip $(ZIP) $(ARCHIVE_FILES)
+
+# Archive files into tar.gz
+.PHONY:
+tar: 
+		tar -czvf $(TAR) $(ARCHIVE_FILES)
+
+# Remove bin file
+.PHONY: rm-bin 
+rm-bin: $(BIN)
+		rm -f $(BIN)
+
+# Remove zip archive
+.PHONY: rm-zip
+rm-zip:
+		rm $(ZIP)
+
+# Remove tar.gz archive
+.PHONY: rm-tar
+rm-tar: 
+		rm $(TAR)
+
