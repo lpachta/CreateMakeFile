@@ -31,7 +31,7 @@ while [[ true ]]; do
   case "$choice" in
   [Nn] | [Nn][Oo])
     if [ -f ~/.config/CreateMakeFiles/CreateMakeFiles.conf ]; then
-      echo "Config wasn't created, but older one was found"
+      echo "Config wasn't created, but older one was found."
     fi
     exit
     ;;
