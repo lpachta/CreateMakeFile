@@ -122,16 +122,17 @@ fi
 case "$Extension" in
 "c")
   CC="gcc"
-  Flags="-std=c99 -pedantic -Wall -g"
-  Compile="\$(CC) $Flags \$(SOURCE_FILES) -o \$(EXE_FILE)"
+  CFlags="-std=c99 -pedantic -Wall -g"
+  Compile="\$(CC) \$(CFLAGS) \$(SRCS) -o \$(BIN)"
   ;;
 "cpp")
   CC="g++"
-  Flags="-g -std=c++14 -Wall -Werror -pedantic"
-  Compile="\$(CC) $Flags \$(SOURCE_FILES) -o \$(EXE_FILE)"
+  CFlags="-g -std=c++14 -Wall -Werror -pedantic"
+  Compile="\$(CC) \$(CFLAGS) \$(SRCS) -o \$(BIN)"
   ;;
 "java")
   CC="javac"
+  CFlags=""
   Compile="\$(CC) \$(SOURCE_FILES)"
   ;;
 *)
@@ -143,39 +144,108 @@ esac
 echo "# Projekt: $ProjectName
 # Autor: $Author
 
-# VARS
-NAME=$ProjectName
-SOURCE_FILES=${SourceFiles[*]}
-CC=$CC
+# Project name
+NAME = $ProjectName
 
-EXE_FILE=$BinFilename
-ALL_FILES=./*
+# Binary filename (also target)
+BIN = $BinFilename
+# Source files
+SRCS = ${SourceFiles[*]}
+# Modules 
+MODULES = *.h
+# Files that are put into archives
+ARCHIVE_FILES = \$(SRCS) \$(MODULES) # Feel free to add additional files here
 
-compile:
-	$Compile
+# Zip filename
+ZIP=\$(NAME).zip
+# Tar filename
+TAR=\$(NAME).tar.gz
 
-run:
-	./\$(EXE_FILE)
+# Compiler
+CC = $CC
+# Compile flags
+CFLAGS = $Cflags
 
+# Compilation command
+COMPILATION=$Compile
 
-clear-exe:
-	rm \$(EXE_FILE)
+# Run the target
+.PHONY: run
+run: \$(BIN)
+		./\$(BIN)
 
-clear-bin:
-	rm -rf bin/ 
-	rm -rf obj/
+.PHONY: compile 
+compile: \$(BIN)
 
-clear-pack:
-	rm \$(NAME).tar.gz
-	rm \$(NAME).zip
+# Compile target
+\$(BIN): \$(SRCS)
+		\$(COMPILATION)
 
-pack: clear-bin 
-	rm \$(NAME)
-	tar cvzf \$(NAME).tar.gz \$(ALL_FILES)
-	zip \$(NAME).zip \$(ALL_FILES)
+# Archive files into zip
+.PHONY:
+zip:
+		zip \$(ZIP) \$(ARCHIVE_FILES)
 
-clear: clear-bin clear-pack clear-exe
+# Archive files into tar.gz
+.PHONY:
+tar: 
+		tar -czvf \$(TAR) \$(ARCHIVE_FILES)
+
+# Remove bin file
+.PHONY: rm-bin 
+rm-bin: \$(BIN)
+		rm -f \$(BIN)
+
+# Remove zip archive
+.PHONY: rm-zip
+rm-zip:
+		rm \$(ZIP)
+
+# Remove tar.gz archive
+.PHONY: rm-tar
+rm-tar: 
+		rm \$(TAR)
+
+.PHONY: clean
+clean: rm-tar rm-zip rm-bin
 " >Makefile
+
+#     echo "# Projekt: $ProjectName
+#     # Autor: $Author
+#
+#     # VARS
+#     NAME=$ProjectName
+#     SOURCE_FILES=${SourceFiles[*]}
+#     CC=$CC
+#
+#     EXE_FILE=$BinFilename
+#     ALL_FILES=./*
+#
+#     compile:
+#     	$Compile
+#
+#     run:
+#     	./\$(EXE_FILE)
+#
+#
+#     clear-exe:
+#     	rm \$(EXE_FILE)
+#
+#     clear-bin:
+#     	rm -rf bin/
+#     	rm -rf obj/
+#
+#     clear-pack:
+#     	rm \$(NAME).tar.gz
+#     	rm \$(NAME).zip
+#
+#     pack: clear-bin
+#     	rm \$(NAME)
+#     	tar cvzf \$(NAME).tar.gz \$(ALL_FILES)
+#     	zip \$(NAME).zip \$(ALL_FILES)
+#
+#     clear: clear-bin clear-pack clear-exe
+#     " >Makefile
 
 if [ -f Makefile ]; then
   echo "Makefile has been created."
