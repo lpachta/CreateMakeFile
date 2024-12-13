@@ -156,7 +156,7 @@ TAR=\$(NAME).tar.gz
 # Compiler
 CC = $CC
 # Compile flags
-CFLAGS = $Cflags
+CFLAGS = $CFlags
 
 # Compilation command
 COMPILATION=$Compile
