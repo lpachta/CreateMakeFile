@@ -116,6 +116,11 @@ if [[ ${#SourceFiles[@]} == 0 ]]; then # If no source files are found
   exit
 fi
 
+for j in *.h; do # Nacteni source files do array
+  [ -f "$j" ] || break
+  HeaderFiles+=("$j")
+done
+
 case "$Extension" in
 "c")
   CC="gcc"
@@ -144,7 +149,7 @@ BIN = $BinFilename
 # Source files
 SRCS = ${SourceFiles[*]}
 # Modules 
-MODULES = *.h
+MODULES = ${HeaderFiles[*]}
 # Files that are put into archives
 ARCHIVE_FILES = \$(SRCS) \$(MODULES) # Feel free to add additional files here
 
