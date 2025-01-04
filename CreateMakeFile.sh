@@ -166,6 +166,12 @@ CFLAGS = $CFlags
 # Compilation command
 COMPILATION=$Compile
 
+# Compile and run 
+.PHONY: compileAndRun
+compileAndRun: \$(SRCS)
+		\$(COMPILATION)
+		./\$(BIN)
+
 # Run the target
 .PHONY: run
 run: \$(BIN)
