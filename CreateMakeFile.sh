@@ -151,7 +151,7 @@ SRCS = ${SourceFiles[*]}
 # Modules 
 MODULES = ${HeaderFiles[*]}
 # Files that are put into archives
-ARCHIVE_FILES = \$(SRCS) \$(MODULES) # Feel free to add additional files here
+ARCHIVE_FILES = \$(SRCS) \$(MODULES) Makefile # Feel free to add additional files here
 
 # Zip filename
 ZIP=\$(NAME).zip
