@@ -58,6 +58,9 @@ case "$Extension" in
 "cpp")
   echo "Creating Makefile for C++ project..."
   ;;
+"java")
+  echo "Creating Makefile for Java project..."
+  ;;
 *)
   echo "Extension $Extension is not supported!"
   echo "Aborting."
@@ -65,12 +68,14 @@ case "$Extension" in
   ;;
 esac
 
-. ~/.config/CreateMakeFiles/CreateMakeFiles.conf # Include a config
+. ~/.config/CreateMakeFiles/CreateMakeFiles.conf # Load a config
 
+# Check if config was loaded
 if ! [ -z config ]; then
   echo "Config was found..."
 fi
 
+# Load other args
 while [[ $# > 0 ]]; do # 2+ ARGS
   shift                # Extension is not $1. Working with other flags
   case "$1" in
@@ -90,22 +95,78 @@ while [[ $# > 0 ]]; do # 2+ ARGS
   esac
 done
 
-# Defaults
-if [[ -z $ProjectName ]]; then
+# Set Defaults Not if not overwritten by config
+if [[ -z $ProjectName ]]; then # Set default ProjectName
   ProjectName=$(basename "$(pwd)")
 fi
-if [[ -z $BinFilename ]]; then
-  BinFilename="\$(NAME).bin"
-fi
-if [[ -z $Author ]]; then
+
+if [[ -z $Author ]]; then # Set default Author
   Author=$(whoami)
+  echo "Author: $Author"
 fi
+
+if [[ -z $C_ext ]]; then # Set default C bin Extension
+  C_ext=".bin"
+fi
+if [[ -z $Cpp_ext ]]; then # Set default Cpp bin Extension
+  Cpp_ext=".bin"
+fi
+if [[ -z $Java_ext ]]; then # Set default Java bin Extension
+  Java_ext=".class"
+fi
+if [[ -z $C_header_ext ]]; then
+  C_header_ext=".h"
+fi
+
+if [[ -z $BinFilename ]]; then # Set default Bin Filename
+  case "$Extension" in
+  "c")
+    BinFilename="\$(NAME)$C_ext"
+    ;;
+  "cpp")
+    BinFilename="\$(NAME)$Cpp_ext"
+    ;;
+  "java")
+    BinFilename="Main"
+    ;;
+  *)
+    echo "Extension $Extension is not supported."
+    echo "Aborting."
+    ;;
+  esac
+fi
+
+case "$Extension" in # Default Compilation stuff //TODO: like, make it clean in here TODO: Also make all stuff changable in the config
+"c")
+  CC="gcc"
+  CFlags="-std=c99 -pedantic -Wall -g"
+  Compile="\$(CC) \$(CFLAGS) \$(SRCS) -o \$(BIN)"
+  Run="./\$(BIN)"
+  ;;
+"cpp")
+  CC="g++"
+  CFlags="-g -std=c++14 -Wall -Werror -pedantic"
+  Compile="\$(CC) \$(CFLAGS) \$(SRCS) -o \$(BIN)"
+  Run="./\$(BIN)"
+  ;;
+"java")
+  CC="javac"
+  Compile="\$(CC) \$(SRCS)"
+  Run="java Main"
+  ;;
+*)
+  echo "ERROR: unsupported extension!"
+  exit
+  ;;
+esac
+# End of defaults
 
 # All info we need from the user is: ProjectName, Author, BinFilename, Extension
 # Cannot run with no flag
 # With one flag it's -h or extension without flag
 # With more flags 1. Load the config 2. load the vars with from flags 3. Defaults
 
+# Load files
 for i in *.$Extension; do # Nacteni source files do array
   [ -f "$i" ] || break
   SourceFiles+=("$i")
@@ -115,28 +176,22 @@ if [[ ${#SourceFiles[@]} == 0 ]]; then # If no source files are found
   echo "Aborting"
   exit
 fi
+echo "Found Source files: ${SourceFiles[*]}"
 
-for j in *.h; do # Nacteni source files do array
-  [ -f "$j" ] || break
-  HeaderFiles+=("$j")
-done
-
+# Load header files if c/cpp
 case "$Extension" in
-"c")
-  CC="gcc"
-  CFlags="-std=c99 -pedantic -Wall -g"
-  Compile="\$(CC) \$(CFLAGS) \$(SRCS) -o \$(BIN)"
+"c" | "cpp")
+  for j in *.h; do # Nacteni header files do array
+    [ -f "$j" ] || break
+    HeaderFiles+=("$j")
+  done
+  echo "Found Header files: ${HeaderFiles[*]}"
   ;;
-"cpp")
-  CC="g++"
-  CFlags="-g -std=c++14 -Wall -Werror -pedantic"
-  Compile="\$(CC) \$(CFLAGS) \$(SRCS) -o \$(BIN)"
-  ;;
-*)
-  echo "ERROR: unsupported extension!"
-  exit
-  ;;
+*) ;;
 esac
+# End of Loading files
+#
+# TODO: In Run add prerequizitiez. Make a var with the file that is outputted by the compiler and a var with name of the file that is run
 
 echo "# Projekt: $ProjectName
 # Autor: $Author
@@ -170,12 +225,12 @@ COMPILATION=$Compile
 .PHONY: compileAndRun
 compileAndRun: \$(SRCS)
 		\$(COMPILATION)
-		./\$(BIN)
+		$Run
 
 # Run the target
 .PHONY: run
-run: \$(BIN)
-		./\$(BIN)
+run: 
+		$Run
 
 .PHONY: compile 
 compile: \$(BIN)
