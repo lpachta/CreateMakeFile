@@ -1,43 +1,5 @@
 #!/bin/bash
 
-# Hodnoty nactene vzdy stejne/automaticky:
-# Author
-# Date
-# ProjectName
-#
-# Hodnoty nactene z terminalu:
-# Extension
-#
-# Hodnoty vygenerovane podle Extension:
-#   C/Cpp:
-# BinFile
-# C_Compiler
-# C_CFlags
-# C_binExt
-#
-#   Cpp:
-# BinFile
-# Cpp_Compiler
-# Cpp_CFlags
-# Cpp_BinExt
-#
-#   Java:
-# ClassFile
-# Java_Compiler
-# Java_CFlags
-# Java_binExt
-#
-# Hodnoty nactene podle Extension:
-#   C/Cpp:
-# SourceFiles
-# HeaderFiles
-# Archive Files
-#
-#   Java:
-# SourceFiles
-# Archive Files
-#
-
 BOLD="\033[1m"
 RESET="\033[0m"
 
@@ -49,13 +11,13 @@ HelpMenu="
 
   CreateMakeFiles is a bash script used for automatic creating of a Makefile.
 
-  Supported languages: C, C++
+  Supported languages: C, C++, Java
   
   This info:
     CreateMakeFiles -h
 
   Usage:
-    CreateMakeFile <c | cpp> [--flag \"value\", ...]
+    CreateMakeFile <c | cpp | java> [--flag \"value\", ...]
 
   Flags:
     -n | --name ..... enter custom Project name
@@ -82,7 +44,6 @@ if [[ $# = 0 ]]; then # 0 ARGS
 fi
 
 # 1 ARG
-
 if [[ $1 = "-h" ]]; then # -h
   echo -e "$HelpMenu"
   exit
@@ -156,9 +117,11 @@ case "$Extension" in
   fi
   if [[ -z $BinFilename ]]; then
     BinFilename="\$(NAME)$C_binExt"
+    echo "Binary file: $BinFilename"
   fi
   if [[ -z $CC ]]; then
     CC="gcc"
+    echo "Compiler: $CC"
   fi
   if [[ -z CFlags ]]; then
     CFlags="-std=c99 -pedantic -Wall -g"
@@ -176,9 +139,11 @@ case "$Extension" in
   fi
   if [[ -z $BinFilename ]]; then
     BinFilename="\$(NAME)$Cpp_binExt"
+    echo "Binary file: $BinFilename"
   fi
   if [[ -z $CC ]]; then
     CC="g++"
+    echo "$CC"
   fi
   if [[ -z CFlags ]]; then
     CFlags="-g -std=c++14 -Wall -Werror -pedantic"
@@ -208,16 +173,11 @@ case "$Extension" in
   fi
   ;;
 *)
-  echo "Extension $Extension is not supported..."
+  echo "ERROR: Extension $Extension is not supported..."
   echo "Aborting."
   ;;
 esac
 # End of defaults
-
-# All info we need from the user is: ProjectName, Author, BinFilename, Extension
-# Cannot run with no flag
-# With one flag it's -h or extension without flag
-# With more flags 1. Load the config 2. load the vars with from flags 3. Defaults
 
 # Load files
 for i in *.$Extension; do # Nacteni source files do array
@@ -225,8 +185,8 @@ for i in *.$Extension; do # Nacteni source files do array
   SourceFiles+=("$i")
 done
 if [[ ${#SourceFiles[@]} == 0 ]]; then # If no source files are found
-  echo "ERROR: No files in $pwd with extension .$Extension"
-  echo "Aborting"
+  echo "ERROR: No files in $pwd with extension .$Extension..."
+  echo "Aborting."
   exit
 fi
 echo "Found Source files: ${SourceFiles[*]}"
