@@ -1,5 +1,43 @@
 #!/bin/bash
 
+# Hodnoty nactene vzdy stejne/automaticky:
+# Author
+# Date
+# ProjectName
+#
+# Hodnoty nactene z terminalu:
+# Extension
+#
+# Hodnoty vygenerovane podle Extension:
+#   C/Cpp:
+# BinFile
+# C_Compiler
+# C_CFlags
+# C_binExt
+#
+#   Cpp:
+# BinFile
+# Cpp_Compiler
+# Cpp_CFlags
+# Cpp_BinExt
+#
+#   Java:
+# ClassFile
+# Java_Compiler
+# Java_CFlags
+# Java_binExt
+#
+# Hodnoty nactene podle Extension:
+#   C/Cpp:
+# SourceFiles
+# HeaderFiles
+# Archive Files
+#
+#   Java:
+# SourceFiles
+# Archive Files
+#
+
 BOLD="\033[1m"
 RESET="\033[0m"
 
@@ -96,67 +134,82 @@ while [[ $# > 0 ]]; do # 2+ ARGS
 done
 
 # Set Defaults Not if not overwritten by config
-if [[ -z $ProjectName ]]; then # Set default ProjectName
-  ProjectName=$(basename "$(pwd)")
-fi
-
+# General vars
 if [[ -z $Author ]]; then # Set default Author
   Author=$(whoami)
   echo "Author: $Author"
 fi
-
-if [[ -z $C_ext ]]; then # Set default C bin Extension
-  C_ext=".bin"
+if [[ -z $ProjectName ]]; then # Set default ProjectName
+  ProjectName=$(basename "$(pwd)")
+  echo "Project name: $ProjectName"
 fi
-if [[ -z $Cpp_ext ]]; then # Set default Cpp bin Extension
-  Cpp_ext=".bin"
-fi
-if [[ -z $Java_ext ]]; then # Set default Java bin Extension
-  Java_ext=".class"
-fi
-if [[ -z $C_header_ext ]]; then
-  C_header_ext=".h"
+if [[ -z $date ]]; then
+  date="$(date)"
+  echo "Date: $date"
 fi
 
-if [[ -z $BinFilename ]]; then # Set default Bin Filename
-  case "$Extension" in
-  "c")
-    BinFilename="\$(NAME)$C_ext"
-    ;;
-  "cpp")
-    BinFilename="\$(NAME)$Cpp_ext"
-    ;;
-  "java")
-    BinFilename="Main"
-    ;;
-  *)
-    echo "Extension $Extension is not supported."
-    echo "Aborting."
-    ;;
-  esac
-fi
-
-case "$Extension" in # Default Compilation stuff //TODO: like, make it clean in here TODO: Also make all stuff changable in the config
+# Language specific vars
+case "$Extension" in
 "c")
-  CC="gcc"
-  CFlags="-std=c99 -pedantic -Wall -g"
-  Compile="\$(CC) \$(CFLAGS) \$(SRCS) -o \$(BIN)"
-  Run="./\$(BIN)"
+  if [[ -z $C_binExt ]]; then # Set default C bin Extension
+    C_binExt=".bin"
+  fi
+  if [[ -z $BinFilename ]]; then
+    BinFilename="\$(NAME)$C_binExt"
+  fi
+  if [[ -z $CC ]]; then
+    CC="gcc"
+  fi
+  if [[ -z CFlags ]]; then
+    CFlags="-std=c99 -pedantic -Wall -g"
+  fi
+  if [[ -z $Compile ]]; then
+    Compile="\$(CC) \$(CFLAGS) \$(SRCS) -o \$(BIN)"
+  fi
+  if [[ -z $Run ]]; then
+    Run="./\$(BIN)"
+  fi
   ;;
 "cpp")
-  CC="g++"
-  CFlags="-g -std=c++14 -Wall -Werror -pedantic"
-  Compile="\$(CC) \$(CFLAGS) \$(SRCS) -o \$(BIN)"
-  Run="./\$(BIN)"
+  if [[ -z $Cpp_binExt ]]; then # Set default Cpp bin Extension
+    Cpp_binExt=".bin"
+  fi
+  if [[ -z $BinFilename ]]; then
+    BinFilename="\$(NAME)$Cpp_binExt"
+  fi
+  if [[ -z $CC ]]; then
+    CC="g++"
+  fi
+  if [[ -z CFlags ]]; then
+    CFlags="-g -std=c++14 -Wall -Werror -pedantic"
+  fi
+  if [[ -z $Compile ]]; then
+    Compile="\$(CC) \$(CFLAGS) \$(SRCS) -o \$(BIN)"
+  fi
+  if [[ -z $Run ]]; then
+    Run="./\$(BIN)"
+  fi
   ;;
 "java")
-  CC="javac"
-  Compile="\$(CC) \$(SRCS)"
-  Run="java Main"
+  if [[ -z $Java_binExt ]]; then # Set default Java bin Extension
+    Java_binExt=".class"
+  fi
+  if [[ -z $BinFilename ]]; then
+    BinFilename="Main$Java_binExt"
+  fi
+  if [[ -z $CC ]]; then
+    CC="javac"
+  fi
+  if [[ -z $Compile ]]; then
+    Compile="\$(CC) \$(SRCS)"
+  fi
+  if [[ -z $Run ]]; then
+    Run="java \$(basename \$(BIN))"
+  fi
   ;;
 *)
-  echo "ERROR: unsupported extension!"
-  exit
+  echo "Extension $Extension is not supported..."
+  echo "Aborting."
   ;;
 esac
 # End of defaults
@@ -190,8 +243,8 @@ case "$Extension" in
 *) ;;
 esac
 # End of Loading files
-#
-# TODO: In Run add prerequizitiez. Make a var with the file that is outputted by the compiler and a var with name of the file that is run
+
+# TODO: In Run add prerequisities. Make a var with the file that is outputted by the compiler and a var with name of the file that is run
 
 echo "# Projekt: $ProjectName
 # Autor: $Author
