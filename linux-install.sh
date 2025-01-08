@@ -27,15 +27,15 @@ fi
 
 while [[ true ]]; do
 
-  read -p "Do you wish to make a configuration file? [Y/n]" choice
+  read -p "Do you wish to make a configuration file? [y/N]" choice
   case "$choice" in
-  [Nn] | [Nn][Oo])
+  [Nn] | [Nn][Oo] | "")
     if [ -f ~/.config/CreateMakeFiles/CreateMakeFiles.conf ]; then
       echo "Config wasn't created, but older one was found."
     fi
     exit
     ;;
-  [Yy] | [Yy][Ee][Ss] | "")
+  [Yy] | [Yy][Ee][Ss])
     cp ./CreateMakeFile.conf ~/.config/CreateMakeFiles/CreateMakeFiles.conf
     if [ -f ~/.config/CreateMakeFiles/CreateMakeFiles.conf ]; then
       echo "Config has been succesfully created."
