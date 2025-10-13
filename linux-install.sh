@@ -36,6 +36,8 @@ while [[ true ]]; do
     exit
     ;;
   [Yy] | [Yy][Ee][Ss])
+    mkdir ~/.config/
+    mkdir ~/.config/CreateMakeFile/
     cp ./CreateMakeFile.conf ~/.config/CreateMakeFiles/CreateMakeFiles.conf
     if [ -f ~/.config/CreateMakeFiles/CreateMakeFiles.conf ]; then
       echo "Config has been succesfully created."
